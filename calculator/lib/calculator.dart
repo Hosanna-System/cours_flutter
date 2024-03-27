@@ -20,15 +20,18 @@ class Calculator extends StatefulWidget {
 
 class _CalculatorState extends State<Calculator> {
   int _counter = 0;
+  int _customIncrement = 1;
 
   void _incrementCounter() {
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter = _counter + 2;
+      _counter = _counter + _customIncrement;
+    });
+  }
+
+  void udpateCustomIncrement(String value) {
+    setState(() {
+      _customIncrement = int.tryParse(value) ?? 1;
+      _counter = 0;
     });
   }
 
@@ -56,8 +59,27 @@ class _CalculatorState extends State<Calculator> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            TextField(
+              decoration: InputDecoration(
+                constraints: BoxConstraints(maxWidth: 200),
+                border: OutlineInputBorder(),
+                labelText: 'Saissisez un incrément',
+              ),
+              textAlign: TextAlign.center,
+              onChanged: udpateCustomIncrement,
+            ),
             Text(
-              ' $_counter + 2 = ${_counter + 2} fois!',
+              ' $_counter + $_customIncrement = ${_counter + _customIncrement}',
+              style: Theme.of(context).textTheme.headlineMedium,
+            ),
+            Text(
+              _counter > 0
+                  ? (_counter == _customIncrement
+                      ? 'Vous avez cliqué 1 fois !'
+                      : (_counter > _customIncrement
+                          ? 'Vous avez cliqué ${_counter / _customIncrement} fois !'
+                          : 'Vous avez cliqué 2 fois !'))
+                  : 'Cliquez pour commencer !',
               style: Theme.of(context).textTheme.headlineMedium,
             ),
           ],
@@ -66,16 +88,16 @@ class _CalculatorState extends State<Calculator> {
       floatingActionButton: FloatingActionButton(
         onPressed: _incrementCounter,
         tooltip: 'Increment',
-        child: const Row(
+        child: Row(
           children: [
-            Spacer(),
-            Icon(Icons.add, color: Color.fromARGB(255, 0, 0, 0)),
+            const Spacer(),
+            const Icon(Icons.add, color: Color.fromARGB(255, 0, 0, 0)),
             Text(
-              '2',
+              '${_customIncrement}',
               style: TextStyle(fontSize: 16),
             ),
-            Spacer(),
-            Spacer(),
+            const Spacer(),
+            const Spacer(),
           ],
         ),
       ), // This trailing comma makes auto-formatting nicer for build methods.
